@@ -77,8 +77,8 @@ def prompt(cfg: ProjectConfig) -> ProjectConfig:
         "Cache backend:",
         choices=[
             questionary.Choice("Redis       (recommended)", value="redis"),
-            questionary.Choice("LocMem      (dev only)",    value="locmem"),
-            questionary.Choice("None / dummy",              value="dummy"),
+            questionary.Choice("LocMem      (dev only)", value="locmem"),
+            questionary.Choice("None / dummy", value="dummy"),
         ],
         default="redis",
         style=STYLE,
@@ -171,13 +171,13 @@ def prompt(cfg: ProjectConfig) -> ProjectConfig:
         style=STYLE,
     ).ask() or []
 
-    cfg.use_celery     = "celery"     in toggles
-    cfg.use_docker     = "docker"     in toggles
-    cfg.use_sentry     = "sentry"     in toggles
-    cfg.use_drf        = "drf"        in toggles
-    cfg.use_swagger    = "swagger"    in toggles
+    cfg.use_celery = "celery" in toggles
+    cfg.use_docker = "docker" in toggles
+    cfg.use_sentry = "sentry" in toggles
+    cfg.use_drf = "drf" in toggles
+    cfg.use_swagger = "swagger" in toggles
     cfg.use_whitenoise = "whitenoise" in toggles
-    cfg.use_pytest     = "pytest"     in toggles
-    cfg.use_ruff       = "ruff"       in toggles
+    cfg.use_pytest = "pytest" in toggles
+    cfg.use_ruff = "ruff" in toggles
 
     return cfg

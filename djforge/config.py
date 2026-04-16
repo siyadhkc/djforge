@@ -10,42 +10,43 @@ from dataclasses import dataclass
 from typing import Literal
 
 
-DatabaseBackend  = Literal["postgres", "sqlite"]
-CacheBackend     = Literal["redis", "locmem", "dummy"]
-AuthStrategy     = Literal["session", "jwt", "both"]
-FrontendChoice   = Literal["none", "htmx", "htmx+tailwind", "react"]
+DatabaseBackend = Literal["postgres", "sqlite"]
+CacheBackend = Literal["redis", "locmem", "dummy"]
+AuthStrategy = Literal["session", "jwt", "both"]
+FrontendChoice = Literal["none", "htmx", "htmx+tailwind", "react"]
 
 
 @dataclass
 class ProjectConfig:
     # ── Identity ──────────────────────────────────────────────────────────────
-    project_name:    str  = "myproject"
-    description:     str  = "A Django project."
-    author:          str  = ""
-    python_version:  str  = "3.12"
-    django_version:  str  = "5.0"
+    project_name: str = "myproject"
+    description: str = "A Django project."
+    author: str = ""
+    python_version: str = "3.12"
+    django_version: str = "5.0"
 
     # ── Stack ─────────────────────────────────────────────────────────────────
-    database:   DatabaseBackend = "postgres"
-    cache:      CacheBackend    = "redis"
-    auth:       AuthStrategy    = "session"
-    frontend:   FrontendChoice  = "none"
+    database: DatabaseBackend = "postgres"
+    cache: CacheBackend = "redis"
+    auth: AuthStrategy = "session"
+    frontend: FrontendChoice = "none"
 
     # ── Features (toggle) ─────────────────────────────────────────────────────
-    use_celery:    bool = True
-    use_docker:    bool = True
+    use_celery: bool = True
+    use_docker: bool = True
     use_whitenoise: bool = True
-    use_sentry:    bool = True
-    use_drf:       bool = True
-    use_swagger:   bool = True
-    use_pytest:    bool = True
-    use_ruff:      bool = True
+    use_sentry: bool = True
+    use_drf: bool = True
+    use_swagger: bool = True
+    use_pytest: bool = True
+    use_ruff: bool = True
 
     # ── Derived helpers ───────────────────────────────────────────────────────
     @property
     def slug(self) -> str:
         """Python-safe package name."""
         import re
+
         return re.sub(r"[^a-z0-9_]", "_", self.project_name.lower())
 
     @property

@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 from rich.console import Console
@@ -18,7 +18,7 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
-from djforge.config import ProjectConfig, PRESETS
+from djforge.config import PRESETS, ProjectConfig
 from djforge.renderer import build_file_map, write_tree
 
 app = typer.Typer(
@@ -37,10 +37,13 @@ _con = Console()
 
 def _banner():
     _con.print()
-    _con.print(Panel(
-        "[bold yellow]⚡  djforge[/]  [dim white]—  fast Django project generator[/]",
-        border_style="yellow", padding=(0, 3),
-    ))
+    _con.print(
+        Panel(
+            "[bold yellow]⚡  djforge[/]  [dim white]—  fast Django project generator[/]",
+            border_style="yellow",
+            padding=(0, 3),
+        )
+    )
     _con.print()
 
 
@@ -49,30 +52,34 @@ def _summary(cfg: ProjectConfig):
     t.add_column(style="dim")
     t.add_column(style="bold green")
     rows = [
-        ("project",  cfg.project_name),
+        ("project", cfg.project_name),
         ("database", cfg.database),
-        ("cache",    cfg.cache),
-        ("auth",     cfg.auth),
-        ("celery",   "yes" if cfg.use_celery    else "no"),
-        ("docker",   "yes" if cfg.use_docker    else "no"),
-        ("drf",      "yes" if cfg.use_drf       else "no"),
-        ("sentry",   "yes" if cfg.use_sentry    else "no"),
+        ("cache", cfg.cache),
+        ("auth", cfg.auth),
+        ("celery", "yes" if cfg.use_celery else "no"),
+        ("docker", "yes" if cfg.use_docker else "no"),
+        ("drf", "yes" if cfg.use_drf else "no"),
+        ("sentry", "yes" if cfg.use_sentry else "no"),
     ]
     for k, v in rows:
         t.add_row(k, v)
-    _con.print(Panel(t, title="[bold]Project config[/]", border_style="dim", padding=(1, 3)))
+    _con.print(
+        Panel(t, title="[bold]Project config[/]", border_style="dim", padding=(1, 3))
+    )
     _con.print()
 
 
 def _post_message(cfg: ProjectConfig, target: Path):
     _con.print()
-    _con.print(Panel(
-        f"[bold green]✅  {cfg.project_name} created![/]\n\n"
-        f"  [dim]cd[/]  [bold]{target.name}[/]\n"
-        f"  [dim]then run[/]  [bold yellow]make install && make migrate && make dev[/]",
-        border_style="green",
-        padding=(1, 3),
-    ))
+    _con.print(
+        Panel(
+            f"[bold green]✅  {cfg.project_name} created![/]\n\n"
+            f"  [dim]cd[/]  [bold]{target.name}[/]\n"
+            f"  [dim]then run[/]  [bold yellow]make install && make migrate && make dev[/]",
+            border_style="green",
+            padding=(1, 3),
+        )
+    )
     _con.print()
 
 
@@ -82,11 +89,20 @@ def _post_message(cfg: ProjectConfig, target: Path):
 
 @app.command("new")
 def new(
-    name: Annotated[Optional[str], typer.Argument(help="Project name")] = None,
-    output_dir: Annotated[Path, typer.Option("--output", "-o", help="Where to create the project")] = Path("."),
-    preset: Annotated[Optional[str], typer.Option("--preset", "-p", help="minimal | api | fullstack")] = None,
+    name: Annotated[str | None, typer.Argument(help="Project name")] = None,
+    output_dir: Annotated[
+        Path,
+        typer.Option("--output", "-o", help="Where to create the project"),
+    ] = Path("."),
+    preset: Annotated[
+        str | None,
+        typer.Option("--preset", "-p", help="minimal | api | fullstack"),
+    ] = None,
     yes: Annotated[bool, typer.Option("--yes", "-y", help="Accept all defaults, no prompts")] = False,
-    venv: Annotated[bool, typer.Option("--venv", help="Create a virtualenv after generation")] = False,
+    venv: Annotated[
+        bool,
+        typer.Option("--venv", help="Create a virtualenv after generation"),
+    ] = False,
     git: Annotated[bool, typer.Option("--git/--no-git", help="Run git init after generation")] = True,
 ):
     """Generate a new Django project."""
@@ -107,6 +123,7 @@ def new(
     if not yes and not preset:
         try:
             from djforge.tui.prompts import prompt
+
             cfg = prompt(cfg)
         except (KeyboardInterrupt, EOFError):
             _con.print("\n[yellow]Aborted.[/]")
@@ -147,12 +164,14 @@ def new(
         try:
             subprocess.run(
                 ["git", "init", "-q"],
-                cwd=target, check=True,
+                cwd=target,
+                check=True,
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             )
             subprocess.run(
                 ["git", "add", "-A"],
-                cwd=target, check=True,
+                cwd=target,
+                check=True,
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             )
             _con.print("  [dim green]✔  git init[/]")
@@ -164,7 +183,8 @@ def new(
         with Progress(
             SpinnerColumn(spinner_name="dots", style="yellow"),
             TextColumn("[progress.description]{task.description}"),
-            console=_con, transient=True,
+            console=_con,
+            transient=True,
         ) as p:
             p.add_task("Creating virtualenv…")
             subprocess.run(
@@ -181,11 +201,21 @@ def new(
 def list_presets():
     """Show available presets."""
     _banner()
-    t = Table("Preset", "Database", "Cache", "Auth", "Celery", "Docker", border_style="dim")
+    t = Table(
+        "Preset",
+        "Database",
+        "Cache",
+        "Auth",
+        "Celery",
+        "Docker",
+        border_style="dim",
+    )
     for name, p in PRESETS.items():
         t.add_row(
             f"[bold yellow]{name}[/]",
-            p.database, p.cache, p.auth,
+            p.database,
+            p.cache,
+            p.auth,
             "✓" if p.use_celery else "—",
             "✓" if p.use_docker else "—",
         )
@@ -199,6 +229,7 @@ def list_presets():
 def version():
     """Show djforge version."""
     from importlib.metadata import version as _v
+
     try:
         v = _v("djforge")
     except Exception:

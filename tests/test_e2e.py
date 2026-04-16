@@ -19,6 +19,7 @@ def run(*args, cwd=None):
 
 # ── new --yes (all defaults) ──────────────────────────────────────────────────
 
+
 def test_new_yes_creates_project(tmp_path):
     r = run("new", "smokeapp", "--yes", "--no-git", "--output", str(tmp_path))
     assert r.returncode == 0, r.stderr
@@ -67,9 +68,18 @@ def test_new_exits_if_dir_exists(tmp_path):
 
 # ── presets ───────────────────────────────────────────────────────────────────
 
+
 @pytest.mark.parametrize("preset", ["minimal", "api", "fullstack"])
 def test_preset_generates(tmp_path, preset):
-    r = run("new", f"{preset}proj", "--preset", preset, "--no-git", "--output", str(tmp_path))
+    r = run(
+        "new",
+        f"{preset}proj",
+        "--preset",
+        preset,
+        "--no-git",
+        "--output",
+        str(tmp_path),
+    )
     assert r.returncode == 0, r.stderr
     assert (tmp_path / f"{preset}proj" / "manage.py").exists()
 

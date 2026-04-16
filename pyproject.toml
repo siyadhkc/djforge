@@ -40,7 +40,7 @@ dev = [
 ]
 
 [project.scripts]
-djforge = "djforge.cli:app"
+djforge = "djforge.cli:main"
 
 [project.urls]
 Homepage    = "https://github.com/siyadhkc/djforge"
