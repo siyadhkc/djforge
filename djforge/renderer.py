@@ -779,7 +779,9 @@ htmlcov/
 
     files["Makefile"] = _t("""
 .DEFAULT_GOAL := help
-.PHONY: help install dev migrate superuser test lint format shell {% if c.use_docker %}docker-up docker-down{% endif %}
+.PHONY: help install dev migrate superuser test lint format shell \
+{% if c.use_docker %}docker-up docker-down{% endif %}
+
 
 help:
 \t@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \\
