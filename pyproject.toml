@@ -58,6 +58,9 @@ include = ["djforge/**", "tests/**", "README.md", "LICENSE"]
 line-length = 88
 select = ["E", "F", "I", "UP", "B"]
 
+[tool.ruff.per-file-ignores]
+"djforge/renderer.py" = ["E501"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
