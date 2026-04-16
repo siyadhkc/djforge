@@ -6,7 +6,7 @@ All values have defaults so `djforge new myapp` works with zero interaction.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Literal
 
 

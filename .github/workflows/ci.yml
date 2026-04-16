@@ -62,6 +62,9 @@ jobs:
       - name: Install djforge
         run: pip install -e .
 
+      - name: Check installed CLI entry point
+        run: djforge --help
+
       - name: Generate project (--yes, all defaults)
         run: djforge new smoketest --yes --no-git
 

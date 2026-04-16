@@ -5,7 +5,7 @@ Entry point:  djforge new <name>  /  djforge new  (interactive)
 """
 from __future__ import annotations
 
-import os
+from copy import deepcopy
 import shutil
 import subprocess
 import sys
@@ -17,14 +17,11 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
-from rich.text import Text
-from rich import print as rprint
 
 from djforge.config import ProjectConfig, PRESETS
 from djforge.renderer import build_file_map, write_tree
 
-app = Console()
-cli = typer.Typer(
+app = typer.Typer(
     name="djforge",
     help="⚡  Fast, modern Django project generator.",
     add_completion=True,
@@ -83,7 +80,7 @@ def _post_message(cfg: ProjectConfig, target: Path):
 # Commands
 # ══════════════════════════════════════════════════════════════════════════════
 
-@cli.command("new")
+@app.command("new")
 def new(
     name: Annotated[Optional[str], typer.Argument(help="Project name")] = None,
     output_dir: Annotated[Path, typer.Option("--output", "-o", help="Where to create the project")] = Path("."),
@@ -100,7 +97,7 @@ def new(
         if preset not in PRESETS:
             _con.print(f"[red]Unknown preset '{preset}'. Available: {', '.join(PRESETS)}[/]")
             raise typer.Exit(1)
-        cfg = PRESETS[preset]
+        cfg = deepcopy(PRESETS[preset])
         if name:
             cfg.project_name = name
     else:
@@ -180,7 +177,7 @@ def new(
     _post_message(cfg, target)
 
 
-@cli.command("list-presets")
+@app.command("list-presets")
 def list_presets():
     """Show available presets."""
     _banner()
@@ -198,7 +195,7 @@ def list_presets():
     _con.print()
 
 
-@cli.command("version")
+@app.command("version")
 def version():
     """Show djforge version."""
     from importlib.metadata import version as _v
@@ -212,7 +209,7 @@ def version():
 # ── entry point ───────────────────────────────────────────────────────────────
 
 def main():
-    cli()
+    app()
 
 
 if __name__ == "__main__":

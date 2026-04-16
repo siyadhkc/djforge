@@ -1,6 +1,6 @@
 """Tests for djforge core logic."""
-import pytest
-from pathlib import Path
+from copy import deepcopy
+
 from djforge.config import ProjectConfig, PRESETS
 from djforge.renderer import build_file_map, render, write_tree
 
@@ -109,7 +109,7 @@ def test_celery_file_present_when_enabled(tmp_path):
     assert f"{cfg.slug}/celery.py" in files
 
 def test_minimal_preset_generates_correctly(tmp_path):
-    cfg = PRESETS["minimal"]
+    cfg = deepcopy(PRESETS["minimal"])
     cfg.project_name = "mintest"
     files = build_file_map(cfg)
     write_tree(tmp_path, files, cfg)

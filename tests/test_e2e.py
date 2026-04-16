@@ -3,7 +3,6 @@ End-to-end tests: invoke the CLI and verify generated output on disk.
 """
 import subprocess
 import sys
-from pathlib import Path
 
 import pytest
 
