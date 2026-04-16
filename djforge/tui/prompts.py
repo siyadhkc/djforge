@@ -16,14 +16,14 @@ from djforge.config import ProjectConfig
 console = Console()
 
 STYLE = questionary.Style([
-    ("qmark",        "fg:#f4c542 bold"),
-    ("question",     "bold"),
-    ("answer",       "fg:#62d4a0 bold"),
-    ("pointer",      "fg:#f4c542 bold"),
-    ("highlighted",  "fg:#f4c542 bold"),
-    ("selected",     "fg:#62d4a0"),
-    ("separator",    "fg:#555555"),
-    ("instruction",  "fg:#888888"),
+    ("qmark", "fg:#f4c542 bold"),
+    ("question", "bold"),
+    ("answer", "fg:#62d4a0 bold"),
+    ("pointer", "fg:#f4c542 bold"),
+    ("highlighted", "fg:#f4c542 bold"),
+    ("selected", "fg:#62d4a0"),
+    ("separator", "fg:#555555"),
+    ("instruction", "fg:#888888"),
 ])
 
 
@@ -31,12 +31,14 @@ def prompt(cfg: ProjectConfig) -> ProjectConfig:
     """Walk the user through every configurable option."""
 
     console.print()
-    console.print(Panel(
-        Text("⚡  djforge", style="bold yellow") +
-        Text("  —  fast Django project generator", style="dim white"),
-        border_style="yellow",
-        padding=(0, 2),
-    ))
+    console.print(
+        Panel(
+            Text("⚡  djforge", style="bold yellow")
+            + Text("  —  fast Django project generator", style="dim white"),
+            border_style="yellow",
+            padding=(0, 2),
+        )
+    )
     console.print()
 
     # ── project name ─────────────────────────────────────────────────────────
@@ -86,9 +88,15 @@ def prompt(cfg: ProjectConfig) -> ProjectConfig:
     cfg.auth = questionary.select(
         "Authentication strategy:",
         choices=[
-            questionary.Choice("Session     (classic Django)",    value="session"),
-            questionary.Choice("JWT         (djangorestframework-simplejwt)", value="jwt"),
-            questionary.Choice("Both        (session + JWT)",     value="both"),
+            questionary.Choice(
+                "Session     (classic Django)",
+                value="session",
+            ),
+            questionary.Choice(
+                "JWT         (djangorestframework-simplejwt)",
+                value="jwt",
+            ),
+            questionary.Choice("Both        (session + JWT)", value="both"),
         ],
         style=STYLE,
     ).ask() or cfg.auth  # type: ignore[assignment]
@@ -97,10 +105,16 @@ def prompt(cfg: ProjectConfig) -> ProjectConfig:
     cfg.frontend = questionary.select(
         "Frontend:",
         choices=[
-            questionary.Choice("None        (API only)",           value="none"),
-            questionary.Choice("HTMX        (server-side hypermedia)", value="htmx"),
-            questionary.Choice("HTMX + Tailwind CSS",              value="htmx+tailwind"),
-            questionary.Choice("React       (separate SPA)",       value="react"),
+            questionary.Choice("None        (API only)", value="none"),
+            questionary.Choice(
+                "HTMX        (server-side hypermedia)",
+                value="htmx",
+            ),
+            questionary.Choice(
+                "HTMX + Tailwind CSS",
+                value="htmx+tailwind",
+            ),
+            questionary.Choice("React       (separate SPA)", value="react"),
         ],
         style=STYLE,
     ).ask() or cfg.frontend  # type: ignore[assignment]
@@ -113,14 +127,46 @@ def prompt(cfg: ProjectConfig) -> ProjectConfig:
     toggles = questionary.checkbox(
         "Include:",
         choices=[
-            questionary.Choice("Celery  (async tasks)",      value="celery",    checked=True),
-            questionary.Choice("Docker  (Dockerfile + Compose)", value="docker", checked=True),
-            questionary.Choice("Sentry  (error tracking)",   value="sentry",    checked=True),
-            questionary.Choice("DRF     (REST framework)",   value="drf",       checked=True),
-            questionary.Choice("Swagger (drf-spectacular)",  value="swagger",   checked=True),
-            questionary.Choice("Whitenoise (static files)",  value="whitenoise",checked=True),
-            questionary.Choice("pytest  (test suite)",       value="pytest",    checked=True),
-            questionary.Choice("Ruff    (fast linter)",      value="ruff",      checked=True),
+            questionary.Choice(
+                "Celery  (async tasks)",
+                value="celery",
+                checked=True,
+            ),
+            questionary.Choice(
+                "Docker  (Dockerfile + Compose)",
+                value="docker",
+                checked=True,
+            ),
+            questionary.Choice(
+                "Sentry  (error tracking)",
+                value="sentry",
+                checked=True,
+            ),
+            questionary.Choice(
+                "DRF     (REST framework)",
+                value="drf",
+                checked=True,
+            ),
+            questionary.Choice(
+                "Swagger (drf-spectacular)",
+                value="swagger",
+                checked=True,
+            ),
+            questionary.Choice(
+                "Whitenoise (static files)",
+                value="whitenoise",
+                checked=True,
+            ),
+            questionary.Choice(
+                "pytest  (test suite)",
+                value="pytest",
+                checked=True,
+            ),
+            questionary.Choice(
+                "Ruff    (fast linter)",
+                value="ruff",
+                checked=True,
+            ),
         ],
         style=STYLE,
     ).ask() or []
