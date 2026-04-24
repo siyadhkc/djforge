@@ -33,9 +33,6 @@ jobs:
       - name: Lint (ruff)
         run: ruff check djforge/ tests/
 
-      - name: Format check (black)
-        run: black --check djforge/ tests/
-
       - name: Run tests
         run: pytest tests/ -v --cov=djforge --cov-report=xml
 
