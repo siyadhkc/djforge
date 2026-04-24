@@ -31,7 +31,7 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Lint (ruff)
-        run: ruff check djforge/
+        run: ruff check djforge/ tests/
 
       - name: Format check (black)
         run: black --check djforge/ tests/
@@ -71,18 +71,17 @@ jobs:
       - name: Install generated project deps
         run: |
           cd smoketest
-          pip install -r requirements/development.txt
+          pip install -r requirements.txt
 
       - name: Check manage.py
         run: |
           cd smoketest
-          cp .env.example .env
-          python manage.py check --settings=smoketest.settings.test
+          python manage.py check
 
       - name: Run generated project tests
         run: |
           cd smoketest
-          pytest --ds=smoketest.settings.test -x -q
+          pytest -x -q
 
   # ── verify presets all generate without error ─────────────────────────────
   presets:
@@ -102,9 +101,11 @@ jobs:
           cache: pip
       - run: pip install -e .
       - name: Generate with preset
-        run: djforge new testproj --preset ${{ matrix.preset }} --no-git
+        run: djforge new testproj --yes --preset ${{ matrix.preset }} --no-git
       - name: Verify structure
         run: |
           test -f testproj/manage.py
-          test -f testproj/testproj/settings/base.py
-          test -f testproj/testproj/apps/users/models.py
+          test -f testproj/requirements.txt
+          test -f testproj/testproj/settings.py
+          test -f testproj/testproj/core/views.py
+          if [ "${{ matrix.preset }}" = "fullstack" ]; then test -f testproj/Dockerfile; fi
