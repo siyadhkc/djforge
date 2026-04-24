@@ -108,7 +108,7 @@ python -m ruff check djforge tests
 python -m hatch build
 ```
 
-4. Upload only the new version files:
+4.Upload only the new version files:
 
 ```bash
 python -m twine upload dist/djforge-0.2.0.tar.gz dist/djforge-0.2.0-py3-none-any.whl
