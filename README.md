@@ -1,195 +1,115 @@
-# ⚡ djforge
+# djforge
 
-> The fast, modern Django project generator. Zero config. Sensible defaults.
-
-```bash
-pipx run djforge new myapp
-```
-
----
-
-## Why djforge?
-
-[cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django) is powerful but heavy — it takes minutes to fill out, generates files you'll never use, and requires installing `cookiecutter` first.
-
-**djforge** takes 30 seconds.
-
-```
-djforge new myapp          # interactive TUI
-djforge new myapp --yes    # zero prompts, full defaults
-djforge new myapp --preset api      # pure REST API stack
-djforge new myapp --preset minimal  # SQLite, no Docker
-```
-
----
+A small CLI that generates simple Django starter projects. Think of it as a tiny,
+focused cousin of cookiecutter-django: fewer questions, fewer files, quick output.
 
 ## Install
 
 ```bash
-# Recommended (no venv needed, globally available)
-pipx install djforge
-
-# Or plain pip
 pip install djforge
 ```
 
----
+For local development:
+
+```bash
+pip install -e ".[dev]"
+```
 
 ## Usage
 
-### Interactive mode (default)
-
-```
-$ djforge new myshop
-
-⚡ djforge — fast Django project generator
-
-  Project name:      myshop
-  Short description: A Django project.
-  Database:          ▸ PostgreSQL   SQLite
-  Cache:             ▸ Redis        LocMem   None
-  Auth:              ▸ Session      JWT      Both
-  Frontend:          ▸ None         HTMX     HTMX+Tailwind   React
-  Include:           [✓] Celery  [✓] Docker  [✓] DRF  [✓] Sentry ...
-
-✅ myshop created!
-
-  cd myshop
-  make install && make migrate && make dev
-```
-
-### Non-interactive
+Create a basic Django project with SQLite:
 
 ```bash
-# Accept all defaults
-djforge new myapp --yes
-
-# Use a preset
-djforge new myapp --preset api
-djforge new myapp --preset fullstack
-djforge new myapp --preset minimal
-
-# Custom output directory
-djforge new myapp --output ~/projects
-
-# With virtualenv creation
-djforge new myapp --yes --venv
-
-# Skip git init
-djforge new myapp --yes --no-git
+djforge new mysite --yes
 ```
 
-### List presets
+Create an API starter with Django REST Framework:
+
+```bash
+djforge new myapi --preset api --yes
+```
+
+Create a fuller Docker/PostgreSQL starter:
+
+```bash
+djforge new myshop --preset fullstack --yes
+```
+
+Use prompts instead of `--yes`:
+
+```bash
+djforge new mysite
+```
+
+List available presets:
 
 ```bash
 djforge list-presets
 ```
 
-| Preset | Database | Cache | Auth | Celery | Docker |
-|--------|----------|-------|------|--------|--------|
-| minimal | SQLite | locmem | session | — | — |
-| api | PostgreSQL | Redis | JWT | ✓ | ✓ |
-| fullstack | PostgreSQL | Redis | session | ✓ | ✓ |
+## Presets
 
----
+| Preset | Database | API | Docker |
+| --- | --- | --- | --- |
+| minimal | SQLite | no | no |
+| api | SQLite | yes | no |
+| fullstack | PostgreSQL | yes | yes |
 
-## What you get
+## Generated Project
 
-```
-myapp/
+The generated project includes:
+
+- `manage.py`
+- one Django settings module
+- a `core` app with a JSON health endpoint
+- `.env.example` and copied `.env`
+- `requirements.txt`
+- `Makefile`
+- `pyproject.toml`
+- optional DRF, Dockerfile, and docker-compose.yml
+
+Example:
+
+```text
+mysite/
 ├── manage.py
-├── Makefile                    ← make dev / test / migrate / lint
-├── Dockerfile                  ← multi-stage, non-root
-├── docker-compose.yml          ← web + postgres + redis + celery
-├── .env / .env.example
-├── pyproject.toml              ← black + ruff + pytest config
-├── requirements/
-│   ├── base.txt
-│   ├── development.txt
-│   └── production.txt
-└── myapp/
-    ├── settings/
-    │   ├── base.py             ← django-environ, DRF, Celery, cache
-    │   ├── development.py      ← debug toolbar, console email
-    │   ├── production.py       ← HTTPS headers, Sentry
-    │   └── test.py             ← in-memory SQLite, fast hashers
-    ├── celery.py
-    ├── urls.py                 ← admin + API v1 + Swagger
-    └── apps/
-        ├── core/               ← /api/v1/health/
-        └── users/              ← custom User (email login) + /api/v1/users/me/
+├── requirements.txt
+├── Makefile
+├── .env.example
+├── pyproject.toml
+└── mysite/
+    ├── settings.py
+    ├── urls.py
+    ├── asgi.py
+    ├── wsgi.py
+    └── core/
+        ├── apps.py
+        ├── urls.py
+        ├── views.py
+        └── tests.py
 ```
-
-### Included by default
-
-| Feature | Details |
-|---------|---------|
-| **Custom User model** | Email-based login, set before first migration |
-| **Split settings** | base / development / production / test |
-| **Security headers** | HSTS, secure cookies, SSL redirect (production) |
-| **DRF** | Django REST Framework + django-filter |
-| **OpenAPI** | drf-spectacular → `/api/docs/` Swagger UI |
-| **Celery** | Async tasks + beat scheduler via Redis |
-| **Whitenoise** | Static files without nginx |
-| **Sentry** | Auto-init from `SENTRY_DSN` env var |
-| **Docker** | Multi-stage build, non-root user |
-| **pytest** | `--reuse-db`, coverage, factory-boy |
-| **Makefile** | `make dev`, `make test`, `make lint`, `make format` |
-
----
-
-## Stack comparison
-
-| | djforge | cookiecutter-django |
-|--|---------|---------------------|
-| Time to first project | ~10s | 3–5 min |
-| Config required | Zero (`--yes`) | Long questionnaire |
-| Install required | `pipx run djforge` | `pip install cookiecutter` + clone |
-| Jinja templates | Yes | Yes |
-| Interactive TUI | Yes (questionary) | Text prompts |
-| Presets | Yes | No |
-| Django version | 5.x | 4.x + 5.x |
-| Python version | 3.11+ | 3.10+ |
-
----
 
 ## Development
 
 ```bash
-git clone https://github.com/siyadhkc/djforge
-cd djforge
-pip install -e ".[dev]"
-pytest
+python -m pytest -p no:cacheprovider
+python -m py_compile djforge\config.py djforge\renderer.py djforge\cli.py
 ```
 
-### Project structure
+## Release
 
-```
-djforge/
-├── djforge/
-│   ├── cli.py        ← typer CLI entry point
-│   ├── config.py     ← ProjectConfig dataclass + presets
-│   ├── renderer.py   ← Jinja2 template engine + file map
-│   └── tui/
-│       └── prompts.py  ← questionary interactive prompts
-└── tests/
-    └── test_core.py
+1. Update `version` in `pyproject.toml` and `__version__` in `djforge/__init__.py`.
+2. Add a changelog entry.
+3. Run checks:
+
+```bash
+python -m pytest tests/test_core.py tests/test_e2e.py -q -p no:cacheprovider
+python -m ruff check djforge tests
+python -m hatch build
 ```
 
----
+4. Upload only the new version files:
 
-## Contributing
-
-PRs welcome! Please open an issue first for large changes.
-
-1. Fork the repo
-2. Create a feature branch
-3. Add tests
-4. `pytest && ruff check .`
-5. Open a PR
-
----
-
-## License
-
-MIT © djforge contributors
+```bash
+python -m twine upload dist/djforge-0.2.0.tar.gz dist/djforge-0.2.0-py3-none-any.whl
+```

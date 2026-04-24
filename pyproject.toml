@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "djforge"
-version = "0.1.0"
-description = "The fast, modern Django project generator. Zero config, sensible defaults."
+version = "0.2.0"
+description = "A tiny cookiecutter-style CLI for simple Django starter projects."
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "djforge contributors" }]
@@ -56,9 +56,11 @@ include = ["djforge/**", "tests/**", "README.md", "LICENSE"]
 
 [tool.ruff]
 line-length = 88
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "djforge/renderer.py" = ["E501"]
 
 [tool.pytest.ini_options]

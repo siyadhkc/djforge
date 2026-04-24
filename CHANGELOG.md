@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0] - 2026-04-24
+
+### Changed
+- Rebuilt djforge as a small cookiecutter-style Django CLI.
+- Simplified generated projects to a clean single-settings Django layout.
+- Replaced the heavy scaffold with `minimal`, `api`, and `fullstack` presets.
+- Kept generated output focused: `manage.py`, `requirements.txt`, `.env`, `Makefile`, `pyproject.toml`, and a `core` health endpoint.
+- Made API and Docker/PostgreSQL support optional through presets.
+- Updated tests around the new generator behavior.
+- Updated README for the new CLI workflow.
+
 ## [0.1.0] — 2026-04
 
 ### Added
